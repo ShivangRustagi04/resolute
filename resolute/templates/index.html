@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KMeans Cluster Prediction</title>
+</head>
+<body>
+    <h1>KMeans Cluster Prediction</h1>
+    <form id="prediction-form">
+        <label for="data">Enter new data point (comma-separated): </label>
+        <input type="text" id="data" name="data" required>
+        <button type="button" onclick="predict()">Predict Cluster</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        function predict() {
+            var data = document.getElementById('data').value;
+            var formData = { 'data': data.split(',').map(Number) };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Predicted Cluster: ' + data.predicted_cluster;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error predicting cluster';
+            });
+        }
+    </script>
+</body>
+</html>

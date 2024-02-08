@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistic Regression Prediction</title>
+</head>
+<body>
+    <h1>Logistic Regression Prediction</h1>
+    <form id="predictionForm">
+        <label for="data">Enter new data point (comma-separated): </label>
+        <input type="text" id="data" name="data" required>
+        <button type="submit">Predict Class</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const data = document.getElementById('data').value;
+            
+            // Convert comma-separated values to array
+            const dataArray = data.split(',').map(Number);
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: dataArray })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `Predicted Class: ${data.predicted_class}`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
